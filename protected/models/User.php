@@ -148,4 +148,47 @@ class User extends ActiveRecord
         }
         return parent::afterDelete();
     }
+    
+        /*
+     * @author Cao Thanh Luc
+     * can view display setting
+     */
+    public function canViewPoll ($poll)
+    {
+        $invited = false;
+        $invitations = $poll->invitations;
+        foreach ($invitations as $invi)
+        {
+            if ($invi->receiver->id == $this->id) {
+                $invited = true;
+            }
+        }
+        if ($poll->user_id == $this->id 
+            || $poll->display_type == 1 
+            || $poll->display_type == 2 
+            || $invited) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public function canVotePoll ($poll)
+    {
+        $invited = false;
+        $invitations = $poll->invitations;
+        foreach ($invitations as $invi) {
+            if ($invi->receiver->id == $this->id) {
+                $invited = true;
+            }
+        }
+        if ($poll->user_id == $this->id 
+            || $poll->display_type == 1 
+            || $invited) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

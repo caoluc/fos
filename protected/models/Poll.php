@@ -264,6 +264,49 @@ class Poll extends ActiveRecord
 
         return $this;
     }
+    
+        /*
+     * @author Cao Thanh Luc
+     * can view display setting
+     */
+    private function canView ($poll)
+    {
+        $invited = false;
+        $invitations = $poll->invitations;
+        foreach ($invitations as $invi)
+        {
+            if ($invi->receiver->id == $this->current_user->id) {
+                $invited = true;
+            }
+        }
+        if ($poll->id == $this->current_user->id 
+            || $poll->display_type == 1 
+            || $poll->display_type == 2 
+            || $invited) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private function canVote ($poll)
+    {
+        $invited = false;
+        $invitations = $poll->invitations;
+        foreach ($invitations as $invi) {
+            if ($invi->receiver->id == $this->current_user->id) {
+                $invited = true;
+            }
+        }
+        if ($poll->id == $this->current_user->id 
+            || $poll->display_type == 1 
+            || $invited) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
 }
 
